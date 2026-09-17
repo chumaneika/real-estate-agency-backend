@@ -31,6 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public User createUser(User user) {
         return userRepository.save(user);
     }
+
     public UserDTO getUserById(Long id) {
         return userRepository.findById(id)
                 .map(userMapping::toDTO)
