@@ -1,11 +1,10 @@
 package com.petproject.term_paper.service;
 
-import com.petproject.term_paper.models.Deal;
-import com.petproject.term_paper.models.Employee;
+import com.petproject.term_paper.entity.DealEntity;
+import com.petproject.term_paper.entity.EmployeeEntity;
 import com.petproject.term_paper.repository.DealRepository;
 import com.petproject.term_paper.repository.EmployeeRepository;
 import com.petproject.term_paper.util.EntityFinder;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,76 +18,76 @@ public class EmployeeService {
     private final DealRepository dealRepository;
     private final EntityFinder entityFinder;
 
-    public List<Employee> getAllEmployees() {
-        List<Employee> employees = new ArrayList<>();
-        employeeRepository.findAll().forEach(employees::add);
-        return employees;
+    public List<EmployeeEntity> getAllEmployees() {
+        List<EmployeeEntity> employeeEntities = new ArrayList<>();
+        employeeRepository.findAll().forEach(employeeEntities::add);
+        return employeeEntities;
     }
 
-    public Employee getEmployeeById(Long id) {
+    public EmployeeEntity getEmployeeById(Long id) {
         return entityFinder.findEmployee(id);
     }
 
-    public Employee createEmployee(Employee employee) {
-        if (employeeRepository.existsByName(employee.getName())) {
+    public EmployeeEntity createEmployee(EmployeeEntity employeeEntity) {
+        if (employeeRepository.existsByName(employeeEntity.getName())) {
             throw new IllegalArgumentException("Employee with this name already exists");
         }
 
-        return employeeRepository.save(employee);
+        return employeeRepository.save(employeeEntity);
     }
 
     public void deleteEmployee(Long id) {
-        Employee foundEmployee = entityFinder.findEmployee(id);
+        EmployeeEntity foundEmployeeEntity = entityFinder.findEmployee(id);
 
-        for (Deal deal : foundEmployee.getDeals()) {
-            deal.setEmployee(null);
-            dealRepository.save(deal);
+        for (DealEntity dealEntity : foundEmployeeEntity.getDealEntities()) {
+            dealEntity.setEmployee(null);
+            dealRepository.save(dealEntity);
         }
 
         employeeRepository.deleteById(id);
     }
 
     public void updateName(Long employeeId, String name) {
-        Employee employee = entityFinder.findEmployee(employeeId);
+        EmployeeEntity employeeEntity = entityFinder.findEmployee(employeeId);
 
-        employee.setName(name);
+        employeeEntity.setName(name);
 
-        employeeRepository.save(employee);
+        employeeRepository.save(employeeEntity);
     }
 
-    public Employee updatePosition(Long employeeId, String position) {
-        Employee employee = entityFinder.findEmployee(employeeId);
+    public EmployeeEntity updatePosition(Long employeeId, String position) {
+        EmployeeEntity employeeEntity = entityFinder.findEmployee(employeeId);
 
-        employee.setPosition(position);
+        employeeEntity.setPosition(position);
 
-        return employeeRepository.save(employee);
+        return employeeRepository.save(employeeEntity);
     }
 
-    public Deal addDealToEmployee(Long employeeId, Long dealId) {
-        Employee employee = entityFinder.findEmployee(employeeId);
-        Deal deal = entityFinder.findDeal(dealId);
-        List<Deal> dealsOfEmployee = employee.getDeals();
+    public DealEntity addDealToEmployee(Long employeeId, Long dealId) {
+        EmployeeEntity employeeEntity = entityFinder.findEmployee(employeeId);
+        DealEntity dealEntity = entityFinder.findDeal(dealId);
+        List<DealEntity> dealsOfEmployee = employeeEntity.getDealEntities();
 
-        dealsOfEmployee.add(deal);
-        employee.setDeals(dealsOfEmployee);
-        deal.setEmployee(employee);
+        dealsOfEmployee.add(dealEntity);
+        employeeEntity.setDealEntities(dealsOfEmployee);
+        dealEntity.setEmployee(employeeEntity);
 
-        employeeRepository.save(employee);
+        employeeRepository.save(employeeEntity);
 
-        return dealRepository.save(deal);
+        return dealRepository.save(dealEntity);
     }
 
-    public Deal removeDealFromEmployee(Long employeeId, Long dealId) {
-        Employee employee = entityFinder.findEmployee(employeeId);
-        Deal deal = entityFinder.findDeal(dealId);
-        List<Deal> dealsOfEmployee = employee.getDeals();
+    public DealEntity removeDealFromEmployee(Long employeeId, Long dealId) {
+        EmployeeEntity employeeEntity = entityFinder.findEmployee(employeeId);
+        DealEntity dealEntity = entityFinder.findDeal(dealId);
+        List<DealEntity> dealsOfEmployee = employeeEntity.getDealEntities();
 
-        dealsOfEmployee.remove(deal);
-        employee.setDeals(dealsOfEmployee);
-        deal.setEmployee(null);
+        dealsOfEmployee.remove(dealEntity);
+        employeeEntity.setDealEntities(dealsOfEmployee);
+        dealEntity.setEmployee(null);
 
-        employeeRepository.save(employee);
+        employeeRepository.save(employeeEntity);
 
-        return dealRepository.save(deal);
+        return dealRepository.save(dealEntity);
     }
 }

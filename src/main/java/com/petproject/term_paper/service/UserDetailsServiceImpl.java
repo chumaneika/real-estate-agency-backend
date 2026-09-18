@@ -3,7 +3,7 @@ package com.petproject.term_paper.service;
 import com.petproject.term_paper.config.UserDetailsImpl;
 import com.petproject.term_paper.dto.UserDTO;
 import com.petproject.term_paper.dto.mapping.UserMapping;
-import com.petproject.term_paper.models.User;
+import com.petproject.term_paper.entity.UserEntity;
 import com.petproject.term_paper.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -22,14 +22,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<UserEntity> user = userRepository.findByUsername(username);
 
         return user.map(UserDetailsImpl::new)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserEntity createUser(UserEntity userEntity) {
+        return userRepository.save(userEntity);
+    }
+
+    public Optional<UserEntity> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 
     public UserDTO getUserById(Long id) {

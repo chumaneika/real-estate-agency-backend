@@ -1,9 +1,9 @@
 package com.petproject.term_paper.service;
 
-import com.petproject.term_paper.models.Client;
-import com.petproject.term_paper.models.Deal;
-import com.petproject.term_paper.models.Employee;
-import com.petproject.term_paper.models.Property;
+import com.petproject.term_paper.entity.ClientEntity;
+import com.petproject.term_paper.entity.DealEntity;
+import com.petproject.term_paper.entity.EmployeeEntity;
+import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.repository.ClientRepository;
 import com.petproject.term_paper.repository.DealRepository;
 import com.petproject.term_paper.repository.EmployeeRepository;
@@ -24,43 +24,43 @@ public class DealService {
     private final PropertyRepository propertyRepository;
     private final EntityFinder entityFinder;
 
-    public Deal getDealById(Long id) {
+    public DealEntity getDealById(Long id) {
         return entityFinder.findDeal(id);
     }
 
-    public List<Deal> getAllDeals() {
-        List<Deal> deals = new ArrayList<>();
-        dealRepository.findAll().forEach(deals::add);
-        return deals;
+    public List<DealEntity> getAllDeals() {
+        List<DealEntity> dealEntities = new ArrayList<>();
+        dealRepository.findAll().forEach(dealEntities::add);
+        return dealEntities;
     }
 
-    public Deal createDeal(Deal deal) {
-        return dealRepository.save(deal);
+    public DealEntity createDeal(DealEntity dealEntity) {
+        return dealRepository.save(dealEntity);
     }
 
     public void deleteDeal(Long dealId) {
-        Deal deal = entityFinder.findDeal(dealId);
+        DealEntity dealEntity = entityFinder.findDeal(dealId);
 
-        if (deal.getEmployee() != null) {
-            Employee employee = deal.getEmployee();
-            employee.getDeals().remove(deal);
-            deal.setEmployee(null);
+        if (dealEntity.getEmployee() != null) {
+            EmployeeEntity employeeEntity = dealEntity.getEmployee();
+            employeeEntity.getDealEntities().remove(dealEntity);
+            dealEntity.setEmployee(null);
         }
 
-        if (deal.getClient() != null) {
-            Client client = deal.getClient();
-            client.getDeals().remove(deal);
-            deal.setClient(null);
+        if (dealEntity.getClient() != null) {
+            ClientEntity clientEntity = dealEntity.getClient();
+            clientEntity.getDeals().remove(dealEntity);
+            dealEntity.setClient(null);
         }
 
-        if (deal.getProperty() != null) {
-            Property property = deal.getProperty();
-            property.getDeals().remove(deal);
-            deal.setProperty(null);
+        if (dealEntity.getProperty() != null) {
+            PropertyEntity propertyEntity = dealEntity.getProperty();
+            propertyEntity.getDealEntities().remove(dealEntity);
+            dealEntity.setProperty(null);
         }
 
-        dealRepository.save(deal);
+        dealRepository.save(dealEntity);
 
-        dealRepository.delete(deal);
+        dealRepository.delete(dealEntity);
     }
 }

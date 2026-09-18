@@ -1,10 +1,9 @@
-package com.petproject.term_paper.models;
+package com.petproject.term_paper.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
 @Table(name = "properties")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Property {
+public class PropertyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,14 +37,14 @@ public class Property {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     @JsonBackReference(value = "owner-properties")
-    private Owner owner;
+    private OwnerEntity ownerEntity;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private PropertyType type;
 
-    @OneToMany(mappedBy = "property")
-    private List<Deal> deals;
+    @OneToMany(mappedBy = "propertyEntity")
+    private List<DealEntity> dealEntities;
 
     public Long getId() {
         return id;
@@ -79,12 +78,12 @@ public class Property {
         this.price = price;
     }
 
-    public Owner getOwner() {
-        return owner;
+    public OwnerEntity getOwnerEntity() {
+        return ownerEntity;
     }
 
-    public void setOwner(Owner owner) {
-        this.owner = owner;
+    public void setOwnerEntity(OwnerEntity ownerEntity) {
+        this.ownerEntity = ownerEntity;
     }
 
     public PropertyType getType() {
@@ -95,12 +94,12 @@ public class Property {
         this.type = type;
     }
 
-    public List<Deal> getDeals() {
-        return deals;
+    public List<DealEntity> getDealEntities() {
+        return dealEntities;
     }
 
-    public void setDeals(List<Deal> deals) {
-        this.deals = deals;
+    public void setDealEntities(List<DealEntity> dealEntities) {
+        this.dealEntities = dealEntities;
     }
 
     public String getTitle() {

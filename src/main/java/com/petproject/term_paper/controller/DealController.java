@@ -1,6 +1,6 @@
 package com.petproject.term_paper.controller;
 
-import com.petproject.term_paper.models.Deal;
+import com.petproject.term_paper.entity.DealEntity;
 import com.petproject.term_paper.service.DealService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,20 +16,20 @@ public class DealController {
     private final DealService dealService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Deal> getDealById(@PathVariable("id") Long id) {
-        Deal foundDeal = dealService.getDealById(id);
-        return ResponseEntity.ok(foundDeal);
+    public ResponseEntity<DealEntity> getDealById(@PathVariable("id") Long id) {
+        DealEntity foundDealEntity = dealService.getDealById(id);
+        return ResponseEntity.ok(foundDealEntity);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Deal>> getAllDeals() {
+    public ResponseEntity<List<DealEntity>> getAllDeals() {
         return ResponseEntity.ok(dealService.getAllDeals());
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Deal> createDeal(@RequestBody Deal deal) {
-        Deal createdDeal = dealService.createDeal(deal);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdDeal);
+    public ResponseEntity<DealEntity> createDeal(@RequestBody DealEntity dealEntity) {
+        DealEntity createdDealEntity = dealService.createDeal(dealEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDealEntity);
     }
 
     @DeleteMapping("/delete/{id}")

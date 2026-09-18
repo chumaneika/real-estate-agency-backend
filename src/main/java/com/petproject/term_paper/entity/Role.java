@@ -1,4 +1,4 @@
-package com.petproject.term_paper.models;
+package com.petproject.term_paper.entity;
 
 public enum Role {
     ADMIN,

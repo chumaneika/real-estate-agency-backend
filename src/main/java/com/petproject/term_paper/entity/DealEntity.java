@@ -1,16 +1,14 @@
-package com.petproject.term_paper.models;
+package com.petproject.term_paper.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "deals")
-public class Deal {
+public class DealEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,17 +34,17 @@ public class Deal {
     @ManyToOne
     @JoinColumn(name = "property_id")
     @JsonBackReference(value = "owner-properties")
-    private Property property;
+    private PropertyEntity propertyEntity;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
     @JsonBackReference(value = "client-deals")
-    private Client client;
+    private ClientEntity clientEntity;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
     @JsonBackReference(value = "employee-deals")
-    private Employee employee;
+    private EmployeeEntity employeeEntity;
 
     public Long getId() {
         return id;
@@ -96,28 +94,28 @@ public class Deal {
         this.price = price;
     }
 
-    public Property getProperty() {
-        return property;
+    public PropertyEntity getProperty() {
+        return propertyEntity;
     }
 
-    public void setProperty(Property property) {
-        this.property = property;
+    public void setProperty(PropertyEntity propertyEntity) {
+        this.propertyEntity = propertyEntity;
     }
 
-    public Client getClient() {
-        return client;
+    public ClientEntity getClient() {
+        return clientEntity;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClient(ClientEntity clientEntity) {
+        this.clientEntity = clientEntity;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public EmployeeEntity getEmployee() {
+        return employeeEntity;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployee(EmployeeEntity employeeEntity) {
+        this.employeeEntity = employeeEntity;
     }
 }
 

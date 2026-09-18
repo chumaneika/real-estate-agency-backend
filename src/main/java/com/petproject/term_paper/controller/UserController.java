@@ -1,7 +1,7 @@
 package com.petproject.term_paper.controller;
 
 import com.petproject.term_paper.dto.UserDTO;
-import com.petproject.term_paper.models.User;
+import com.petproject.term_paper.entity.UserEntity;
 import com.petproject.term_paper.service.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ public class UserController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return ResponseEntity.ok(userService.createUser(user));
+    public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity userEntity) {
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        return ResponseEntity.ok(userService.createUser(userEntity));
     }
 
     @GetMapping("/{id}")

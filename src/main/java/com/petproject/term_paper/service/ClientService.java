@@ -1,7 +1,7 @@
 package com.petproject.term_paper.service;
 
-import com.petproject.term_paper.models.Client;
-import com.petproject.term_paper.models.Deal;
+import com.petproject.term_paper.entity.ClientEntity;
+import com.petproject.term_paper.entity.DealEntity;
 import com.petproject.term_paper.repository.ClientRepository;
 import com.petproject.term_paper.repository.DealRepository;
 import com.petproject.term_paper.util.EntityFinder;
@@ -18,52 +18,52 @@ public class ClientService {
     private final DealRepository dealRepository;
     private final EntityFinder entityFinder;
 
-    public Client getClientById(Long id) {
+    public ClientEntity getClientById(Long id) {
         return entityFinder.findClient(id);
     }
 
-    public List<Client> getAllClients() {
-        List<Client> clients = new ArrayList<>();
-        clientRepository.findAll().forEach(clients::add);
-        return clients;
+    public List<ClientEntity> getAllClients() {
+        List<ClientEntity> clientEntities = new ArrayList<>();
+        clientRepository.findAll().forEach(clientEntities::add);
+        return clientEntities;
     }
 
-    public Client createClient(Client client) {
-        if (clientRepository.existsByEmail(client.getEmail())) {
+    public ClientEntity createClient(ClientEntity clientEntity) {
+        if (clientRepository.existsByEmail(clientEntity.getEmail())) {
             throw new IllegalArgumentException("Client with this email already exists");
         }
-        return clientRepository.save(client);
+        return clientRepository.save(clientEntity);
     }
 
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
     }
 
-    public Deal assignDealToClient(Long clientId, Long dealId) {
-        Client foundClient = entityFinder.findClient(clientId);
-        Deal foundDeal = entityFinder.findDeal(dealId);
+    public DealEntity assignDealToClient(Long clientId, Long dealId) {
+        ClientEntity foundClientEntity = entityFinder.findClient(clientId);
+        DealEntity foundDealEntity = entityFinder.findDeal(dealId);
 
-        List<Deal> dealsOfClient = foundClient.getDeals();
-        dealsOfClient.add(foundDeal);
-        foundClient.setDeals(dealsOfClient);
-        clientRepository.save(foundClient);
+        List<DealEntity> dealsOfClient = foundClientEntity.getDeals();
+        dealsOfClient.add(foundDealEntity);
+        foundClientEntity.setDeals(dealsOfClient);
+        clientRepository.save(foundClientEntity);
 
-        foundDeal.setClient(foundClient);
-        dealRepository.save(foundDeal);
+        foundDealEntity.setClient(foundClientEntity);
+        dealRepository.save(foundDealEntity);
 
-        return foundDeal;
+        return foundDealEntity;
     }
 
     public void removeDealFromClient(Long clientId, Long dealId) {
-        Client foundClient = entityFinder.findClient(clientId);
-        Deal foundDeal = entityFinder.findDeal(dealId);
+        ClientEntity foundClientEntity = entityFinder.findClient(clientId);
+        DealEntity foundDealEntity = entityFinder.findDeal(dealId);
 
-        List<Deal> dealsClient = foundClient.getDeals();
-        dealsClient.remove(foundDeal);
-        foundClient.setDeals(dealsClient);
-        clientRepository.save(foundClient);
+        List<DealEntity> dealsClient = foundClientEntity.getDeals();
+        dealsClient.remove(foundDealEntity);
+        foundClientEntity.setDeals(dealsClient);
+        clientRepository.save(foundClientEntity);
 
-        foundDeal.setClient(null);
-        dealRepository.save(foundDeal);
+        foundDealEntity.setClient(null);
+        dealRepository.save(foundDealEntity);
     }
 }

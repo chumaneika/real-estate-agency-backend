@@ -1,4 +1,4 @@
-package com.petproject.term_paper.models;
+package com.petproject.term_paper.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "employees")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Employee {
+public class EmployeeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,9 +34,9 @@ public class Employee {
     @Column(name = "experience", nullable = false)
     private Integer experience;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employeeEntity")
     @JsonManagedReference(value = "employee-deals")
-    private List<Deal> deals;
+    private List<DealEntity> dealEntities;
 
     public Long getId() {
         return id;
@@ -62,12 +62,12 @@ public class Employee {
         this.position = position;
     }
 
-    public List<Deal> getDeals() {
-        return deals;
+    public List<DealEntity> getDealEntities() {
+        return dealEntities;
     }
 
-    public void setDeals(List<Deal> deals) {
-        this.deals = deals;
+    public void setDealEntities(List<DealEntity> dealEntities) {
+        this.dealEntities = dealEntities;
     }
 
     public Integer getExperience() {

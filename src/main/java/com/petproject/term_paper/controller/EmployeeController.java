@@ -1,10 +1,8 @@
 package com.petproject.term_paper.controller;
 
-import com.petproject.term_paper.models.Deal;
-import com.petproject.term_paper.models.Employee;
-import com.petproject.term_paper.models.Owner;
+import com.petproject.term_paper.entity.DealEntity;
+import com.petproject.term_paper.entity.EmployeeEntity;
 import com.petproject.term_paper.service.EmployeeService;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +17,19 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Employee>> getAllEmployees() {
+    public ResponseEntity<List<EmployeeEntity>> getAllEmployees() {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getOwnerById(@PathVariable("id") Long id) {
+    public ResponseEntity<EmployeeEntity> getOwnerById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        Employee createdEmployee = employeeService.createEmployee(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
+    public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody EmployeeEntity employeeEntity) {
+        EmployeeEntity createdEmployeeEntity = employeeService.createEmployee(employeeEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployeeEntity);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -53,9 +51,9 @@ public class EmployeeController {
     }
 
     @PostMapping("/assign-deal/{employeeId}/{dealId}")
-    public ResponseEntity<Deal> addDealToEmployee(@PathVariable("employeeId") Long employeeId, @PathVariable("dealId") Long dealId) {
-        Deal addedDeal = employeeService.addDealToEmployee(employeeId, dealId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedDeal);
+    public ResponseEntity<DealEntity> addDealToEmployee(@PathVariable("employeeId") Long employeeId, @PathVariable("dealId") Long dealId) {
+        DealEntity addedDealEntity = employeeService.addDealToEmployee(employeeId, dealId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedDealEntity);
 
         // todo "come back late"
     }

@@ -1,7 +1,6 @@
 package com.petproject.term_paper.controller;
 
-import com.petproject.term_paper.models.Owner;
-import com.petproject.term_paper.models.Property;
+import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.service.PropertyService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,19 +16,19 @@ public class PropertyController {
     private final PropertyService propertyService;
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Property>> getAllProperties() {
+    public ResponseEntity<List<PropertyEntity>> getAllProperties() {
         return ResponseEntity.ok(propertyService.getAllProperties());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Property> getPropertyById(@PathVariable("id") Long id) {
+    public ResponseEntity<PropertyEntity> getPropertyById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.FOUND).body(propertyService.getPropertyById(id));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Property> createProperty(@RequestBody Property property) {
-        Property createdProperty = propertyService.createProperty(property);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProperty);
+    public ResponseEntity<PropertyEntity> createProperty(@RequestBody PropertyEntity propertyEntity) {
+        PropertyEntity createdPropertyEntity = propertyService.createProperty(propertyEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPropertyEntity);
     }
 
     @DeleteMapping("/delete/{id}")

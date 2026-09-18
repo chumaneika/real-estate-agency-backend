@@ -1,7 +1,7 @@
 package com.petproject.term_paper.controller;
 
-import com.petproject.term_paper.models.Owner;
-import com.petproject.term_paper.models.Property;
+import com.petproject.term_paper.entity.OwnerEntity;
+import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.service.OwnerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,19 +17,19 @@ public class OwnerController {
     private final OwnerService ownerService;
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Owner>> getAllOwners() {
+    public ResponseEntity<List<OwnerEntity>> getAllOwners() {
         return ResponseEntity.ok(ownerService.getAllOwners());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Owner> getOwnerById(@PathVariable("id") Long id) {
+    public ResponseEntity<OwnerEntity> getOwnerById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(ownerService.getOwnerById(id));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Owner> createOwner(@RequestBody Owner owner) {
-        Owner createdOwner = ownerService.createOwner(owner);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdOwner);
+    public ResponseEntity<OwnerEntity> createOwner(@RequestBody OwnerEntity ownerEntity) {
+        OwnerEntity createdOwnerEntity = ownerService.createOwner(ownerEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdOwnerEntity);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -39,9 +39,9 @@ public class OwnerController {
     }
 
     @PostMapping("/assign-property/{ownerId}/{propertyId}")
-    public ResponseEntity<Property> addPropertyToOwner(@PathVariable("ownerId") Long ownerId, @PathVariable("propertyId") Long propertyId) {
-        Property addedProperty = ownerService.addPropertyToOwner(ownerId, propertyId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedProperty);
+    public ResponseEntity<PropertyEntity> addPropertyToOwner(@PathVariable("ownerId") Long ownerId, @PathVariable("propertyId") Long propertyId) {
+        PropertyEntity addedPropertyEntity = ownerService.addPropertyToOwner(ownerId, propertyId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedPropertyEntity);
     }
 
     @DeleteMapping("/delete-property/{ownerId}/{propertyId}")

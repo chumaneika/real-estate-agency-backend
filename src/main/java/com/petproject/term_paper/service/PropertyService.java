@@ -1,7 +1,7 @@
 package com.petproject.term_paper.service;
 
-import com.petproject.term_paper.models.Owner;
-import com.petproject.term_paper.models.Property;
+import com.petproject.term_paper.entity.OwnerEntity;
+import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.repository.OwnerRepository;
 import com.petproject.term_paper.repository.PropertyRepository;
 import com.petproject.term_paper.util.EntityFinder;
@@ -19,34 +19,34 @@ public class PropertyService {
     private final OwnerRepository ownerRepository;
     private final EntityFinder entityFinder;
 
-    public List<Property> getAllProperties() {
-        List<Property> properties = new ArrayList<>();
+    public List<PropertyEntity> getAllProperties() {
+        List<PropertyEntity> properties = new ArrayList<>();
         propertyRepository.findAll().forEach(properties::add);
         return properties;
     }
 
-    public Property getPropertyById(Long id) {
+    public PropertyEntity getPropertyById(Long id) {
         return entityFinder.findProperty(id);
     }
 
-    public Property createProperty(Property property) {
-        return propertyRepository.save(property);
+    public PropertyEntity createProperty(PropertyEntity propertyEntity) {
+        return propertyRepository.save(propertyEntity);
     }
 
     public void deleteProperty(Long propertyId) {
-        Property property = entityFinder.findProperty(propertyId);
+        PropertyEntity propertyEntity = entityFinder.findProperty(propertyId);
 
-        if (property.getOwner() == null) {
+        if (propertyEntity.getOwnerEntity() == null) {
             propertyRepository.deleteById(propertyId);
         } else {
-            Owner owner = ownerRepository.findById(property.getOwner().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Owner not found with id: " + property.getOwner().getId()));
+            OwnerEntity ownerEntity = ownerRepository.findById(propertyEntity.getOwnerEntity().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Owner not found with id: " + propertyEntity.getOwnerEntity().getId()));
 
-            List<Property> propertiesOwner = owner.getProperties();
-            propertiesOwner.remove(property);
-            owner.setProperties(propertiesOwner);
+            List<PropertyEntity> propertiesOwner = ownerEntity.getProperties();
+            propertiesOwner.remove(propertyEntity);
+            ownerEntity.setProperties(propertiesOwner);
 
-            ownerRepository.save(owner);
+            ownerRepository.save(ownerEntity);
 
             propertyRepository.deleteById(propertyId);
 
@@ -54,26 +54,26 @@ public class PropertyService {
     }
 
     public void assignForOwner(Long propertyId, Long ownerId) {
-        Property property = entityFinder.findProperty(propertyId);
-        Owner owner = entityFinder.findOwner(ownerId);
+        PropertyEntity propertyEntity = entityFinder.findProperty(propertyId);
+        OwnerEntity ownerEntity = entityFinder.findOwner(ownerId);
 
-        List<Property> ownerProperties = owner.getProperties();
-        ownerProperties.add(property);
-        owner.setProperties(ownerProperties);
-        property.setOwner(owner);
+        List<PropertyEntity> ownerProperties = ownerEntity.getProperties();
+        ownerProperties.add(propertyEntity);
+        ownerEntity.setProperties(ownerProperties);
+        propertyEntity.setOwnerEntity(ownerEntity);
 
-        ownerRepository.save(owner);
+        ownerRepository.save(ownerEntity);
     }
 
     public void removeForOwner(Long propertyId, Long ownerId) {
-        Property property = entityFinder.findProperty(propertyId);
-        Owner owner = entityFinder.findOwner(ownerId);
+        PropertyEntity propertyEntity = entityFinder.findProperty(propertyId);
+        OwnerEntity ownerEntity = entityFinder.findOwner(ownerId);
 
-        List<Property> propertiesOwner = owner.getProperties();
-        propertiesOwner.remove(property);
-        owner.setProperties(propertiesOwner);
+        List<PropertyEntity> propertiesOwner = ownerEntity.getProperties();
+        propertiesOwner.remove(propertyEntity);
+        ownerEntity.setProperties(propertiesOwner);
 
-        propertyRepository.save(property);
-        ownerRepository.save(owner);
+        propertyRepository.save(propertyEntity);
+        ownerRepository.save(ownerEntity);
     }
 }

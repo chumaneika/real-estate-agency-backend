@@ -1,37 +1,36 @@
 package com.petproject.term_paper.config;
 
-import com.petproject.term_paper.models.User;
+import com.petproject.term_paper.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
-    private User user;
+    private UserEntity userEntity;
 
-    public UserDetailsImpl(User user) {
-        this.user = user;
+    public UserDetailsImpl(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(user.getRoles().split(", "))
+        return Arrays.stream(userEntity.getRoles().split(", "))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return userEntity.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return userEntity.getUsername();
     }
 
     @Override
@@ -51,6 +50,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return userEntity.isEnabled();
     }
 }

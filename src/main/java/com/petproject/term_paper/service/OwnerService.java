@@ -1,7 +1,7 @@
 package com.petproject.term_paper.service;
 
-import com.petproject.term_paper.models.Owner;
-import com.petproject.term_paper.models.Property;
+import com.petproject.term_paper.entity.OwnerEntity;
+import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.repository.OwnerRepository;
 import com.petproject.term_paper.repository.PropertyRepository;
 import com.petproject.term_paper.util.EntityFinder;
@@ -19,59 +19,59 @@ public class OwnerService {
     private final PropertyRepository propertyRepository;
     private final EntityFinder entityFinder;
 
-    public List<Owner> getAllOwners() {
-        List<Owner> owners = new ArrayList<>();
-        ownerRepository.findAll().forEach(owners::add);
-        return owners;
+    public List<OwnerEntity> getAllOwners() {
+        List<OwnerEntity> ownerEntities = new ArrayList<>();
+        ownerRepository.findAll().forEach(ownerEntities::add);
+        return ownerEntities;
     }
 
-    public Owner getOwnerById(Long id) {
+    public OwnerEntity getOwnerById(Long id) {
         return entityFinder.findOwner(id);
     }
 
-    public Owner createOwner(Owner owner) {
-        if (ownerRepository.existsByEmail(owner.getEmail())) {
+    public OwnerEntity createOwner(OwnerEntity ownerEntity) {
+        if (ownerRepository.existsByEmail(ownerEntity.getEmail())) {
             throw new IllegalArgumentException("Owner with this email already exists");
         }
 
-        return ownerRepository.save(owner);
+        return ownerRepository.save(ownerEntity);
     }
 
     public void deleteOwner(Long id) {
-        Owner owner = ownerRepository.findById(id)
+        OwnerEntity ownerEntity = ownerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Owner not found"));
 
-        for (Property property : owner.getProperties()) {
-            property.setOwner(null);
-            propertyRepository.save(property);
+        for (PropertyEntity propertyEntity : ownerEntity.getProperties()) {
+            propertyEntity.setOwnerEntity(null);
+            propertyRepository.save(propertyEntity);
         }
 
         ownerRepository.deleteById(id);
     }
 
-    public Property addPropertyToOwner(Long ownerId, Long propertyId) {
-        Owner owner = entityFinder.findOwner(ownerId);
-        Property property = entityFinder.findProperty(propertyId);
+    public PropertyEntity addPropertyToOwner(Long ownerId, Long propertyId) {
+        OwnerEntity ownerEntity = entityFinder.findOwner(ownerId);
+        PropertyEntity propertyEntity = entityFinder.findProperty(propertyId);
 
-        List<Property> ownerProperties = owner.getProperties();
-        ownerProperties.add(property);
-        property.setOwner(owner);
-        owner.setProperties(ownerProperties);
+        List<PropertyEntity> ownerProperties = ownerEntity.getProperties();
+        ownerProperties.add(propertyEntity);
+        propertyEntity.setOwnerEntity(ownerEntity);
+        ownerEntity.setProperties(ownerProperties);
 
-        ownerRepository.save(owner);
-        return property;
+        ownerRepository.save(ownerEntity);
+        return propertyEntity;
     }
 
     public void deletePropertyFromOwner(Long ownerId, Long propertyId) {
-        Owner owner = entityFinder.findOwner(ownerId);
-        Property property = entityFinder.findProperty(propertyId);
+        OwnerEntity ownerEntity = entityFinder.findOwner(ownerId);
+        PropertyEntity propertyEntity = entityFinder.findProperty(propertyId);
 
-        owner.getProperties().remove(property);
-        property.setOwner(null); // Разрываем связь
+        ownerEntity.getProperties().remove(propertyEntity);
+        propertyEntity.setOwnerEntity(null); // Разрываем связь
 
         // Сохраняем изменения
-        propertyRepository.save(property);
-        ownerRepository.save(owner);
+        propertyRepository.save(propertyEntity);
+        ownerRepository.save(ownerEntity);
     }
 
 }

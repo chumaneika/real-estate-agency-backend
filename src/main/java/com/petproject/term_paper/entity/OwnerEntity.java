@@ -1,13 +1,18 @@
-package com.petproject.term_paper.models;
+package com.petproject.term_paper.entity;
+
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
-@Table(name = "clients")
-public class Client {
+@Table(name = "owners")
+@NoArgsConstructor
+@AllArgsConstructor
+public class OwnerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,10 +20,10 @@ public class Client {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "surname")
+    @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "phoneNumber", unique = true)
@@ -27,9 +32,9 @@ public class Client {
     @Column(name = "notes")
     private String notes;
 
-    @OneToMany(mappedBy = "client")
-    @JsonManagedReference(value = "client-deals")
-    private List<Deal> deals;
+    @OneToMany(mappedBy = "ownerEntity", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "owner-properties")
+    private List<PropertyEntity> properties;
 
     public Long getId() {
         return id;
@@ -55,12 +60,12 @@ public class Client {
         this.email = email;
     }
 
-    public List<Deal> getDeals() {
-        return deals;
+    public List<PropertyEntity> getProperties() {
+        return properties;
     }
 
-    public void setDeals(List<Deal> deals) {
-        this.deals = deals;
+    public void setProperties(List<PropertyEntity> properties) {
+        this.properties = properties;
     }
 
     public String getSurname() {
