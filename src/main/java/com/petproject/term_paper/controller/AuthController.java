@@ -9,6 +9,7 @@ import com.petproject.term_paper.service.UserDetailsServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,6 +91,19 @@ public class AuthController {
 
         UserDTO response = userMapping.toDTO(userService.createUser(user));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> currentUser(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        if (principal == null) {
+            return error(HttpStatus.UNAUTHORIZED, "Sign in to view your profile.");
+        }
+
+        return userService.findByUsername(principal.getName())
+                .filter(UserEntity::isEnabled)
+                .<ResponseEntity<?>>map(user -> ResponseEntity.ok(userMapping.toDTO(user)))
+                .orElseGet(() -> error(HttpStatus.UNAUTHORIZED, "Your account is unavailable."));
     }
 
     private ResponseEntity<Map<String, String>> error(HttpStatus status, String message) {

@@ -1,5 +1,7 @@
 package com.petproject.term_paper.controller;
 
+import com.petproject.term_paper.dto.PropertyDTO;
+import com.petproject.term_paper.dto.mapping.PropertyMapping;
 import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.service.PropertyService;
 import lombok.AllArgsConstructor;
@@ -8,21 +10,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/properties")
 public class PropertyController {
     private final PropertyService propertyService;
+    private final PropertyMapping propertyMapping;
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<PropertyEntity>> getAllProperties() {
-        return ResponseEntity.ok(propertyService.getAllProperties());
+    public ResponseEntity<List<PropertyDTO>> getAllProperties() {
+        return ResponseEntity.ok(propertyService.getAllProperties().stream().map(propertyMapping::toDTO).toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PropertyEntity> getPropertyById(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(propertyService.getPropertyById(id));
+    public ResponseEntity<?> getPropertyById(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok(propertyMapping.toDTO(propertyService.getPropertyById(id)));
+        } catch (EntityNotFoundException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Property not found."));
+        }
     }
 
     @PostMapping("/create")
