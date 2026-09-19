@@ -43,6 +43,12 @@ public class PropertyEntity {
     @Column(name = "type")
     private PropertyType type;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "property_images", joinColumns = @JoinColumn(name = "property_id"))
+    @OrderColumn(name = "display_order")
+    @Column(name = "image_url", nullable = false, length = 2048)
+    private List<String> imageUrls;
+
     @OneToMany(mappedBy = "propertyEntity")
     private List<DealEntity> dealEntities;
 
@@ -124,5 +130,13 @@ public class PropertyEntity {
 
     public void setRooms(Integer rooms) {
         this.rooms = rooms;
+    }
+
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

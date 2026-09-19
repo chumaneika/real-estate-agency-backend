@@ -3,6 +3,8 @@ package com.petproject.term_paper.dto;
 import com.petproject.term_paper.entity.PropertyType;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class PropertyDTO {
     private Long id;
@@ -13,4 +15,5 @@ public class PropertyDTO {
     private Integer rooms;
     private Double price;
     private PropertyType type;
+    private List<String> imageUrls;
 }
