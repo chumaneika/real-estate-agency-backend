@@ -35,9 +35,14 @@ public class PropertyController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<PropertyEntity> createProperty(@RequestBody PropertyEntity propertyEntity) {
+    public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyEntity propertyEntity) {
         PropertyEntity createdPropertyEntity = propertyService.createProperty(propertyEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdPropertyEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(propertyMapping.toDTO(createdPropertyEntity));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidProperty(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));
     }
 
     @DeleteMapping("/delete/{id}")

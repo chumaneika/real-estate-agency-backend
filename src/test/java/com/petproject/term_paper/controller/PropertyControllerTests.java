@@ -44,4 +44,28 @@ class PropertyControllerTests {
         when(service.getPropertyById(1L)).thenThrow(new EntityNotFoundException());
         assertEquals(HttpStatus.NOT_FOUND, controller.getPropertyById(1L).getStatusCode());
     }
+
+    @Test
+    void createReturnsPropertyWithCloudinaryImageUrls() {
+        PropertyEntity request = new PropertyEntity();
+        request.setImageUrls(List.of(
+                "https://res.cloudinary.com/demo/image/upload/v1/first.jpg",
+                "https://res.cloudinary.com/demo/image/upload/v1/second.jpg"
+        ));
+        PropertyEntity saved = new PropertyEntity();
+        saved.setId(1L);
+        saved.setImageUrls(request.getImageUrls());
+        PropertyDTO dto = new PropertyDTO();
+        dto.setId(1L);
+        dto.setImageUrls(saved.getImageUrls());
+
+        when(service.createProperty(request)).thenReturn(saved);
+        when(mapping.toDTO(saved)).thenReturn(dto);
+
+        var response = controller.createProperty(request);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(dto, response.getBody());
+        assertEquals(saved.getImageUrls(), response.getBody().getImageUrls());
+    }
 }

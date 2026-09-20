@@ -1,6 +1,7 @@
 package com.petproject.term_paper.controller;
 
 import com.petproject.term_paper.dto.UserDTO;
+import com.petproject.term_paper.dto.LoginRequest;
 import com.petproject.term_paper.dto.mapping.UserMapping;
 import com.petproject.term_paper.entity.UserEntity;
 import com.petproject.term_paper.service.UserDetailsServiceImpl;
@@ -19,7 +20,32 @@ class AuthControllerTests {
     private final UserDetailsServiceImpl users = mock(UserDetailsServiceImpl.class);
     private final UserMapping mapping = mock(UserMapping.class);
     private final HttpServletRequest request = mock(HttpServletRequest.class);
-    private final AuthController controller = new AuthController(users, mapping, mock(PasswordEncoder.class));
+    private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+    private final AuthController controller = new AuthController(users, mapping, passwordEncoder);
+
+    @Test
+    void loginAcceptsEmailAndAuthenticatesWithUsername() throws Exception {
+        LoginRequest login = new LoginRequest();
+        login.setUsername("client@primekey.local");
+        login.setPassword("Client123!");
+        UserEntity user = new UserEntity();
+        user.setUsername("primekey_client");
+        user.setEmail("client@primekey.local");
+        user.setPassword("encoded-password");
+        user.setEnabled(true);
+        UserDTO dto = new UserDTO();
+        dto.setUsername("primekey_client");
+
+        when(users.findByUsernameOrEmail("client@primekey.local")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("Client123!", "encoded-password")).thenReturn(true);
+        when(mapping.toDTO(user)).thenReturn(dto);
+
+        var response = controller.login(login, request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(dto, response.getBody());
+        verify(request).login("primekey_client", "Client123!");
+    }
 
     @Test
     void profileRequiresSession() {

@@ -40,10 +40,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest servletRequest) {
         if (isBlank(request.getUsername()) || isBlank(request.getPassword())) {
-            return error(HttpStatus.BAD_REQUEST, "Username and password are required.");
+            return error(HttpStatus.BAD_REQUEST, "Username or email and password are required.");
         }
 
-        UserEntity user = userService.findByUsername(request.getUsername().trim())
+        UserEntity user = userService.findByUsernameOrEmail(request.getUsername().trim())
                 .filter(UserEntity::isEnabled)
                 .filter(foundUser -> passwordEncoder.matches(request.getPassword(), foundUser.getPassword()))
                 .orElse(null);

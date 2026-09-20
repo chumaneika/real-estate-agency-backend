@@ -36,6 +36,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    public Optional<UserEntity> findByUsernameOrEmail(String identifier) {
+        if (identifier.contains("@")) {
+            return userRepository.findByEmail(identifier.toLowerCase());
+        }
+        return userRepository.findByUsername(identifier);
+    }
+
     public boolean existsByUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
