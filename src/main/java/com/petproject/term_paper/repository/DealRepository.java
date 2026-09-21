@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDate;
 
 public interface DealRepository extends JpaRepository<DealEntity, Long> {
+    boolean existsByPropertyId(Long propertyId);
     long countByDateOpen(LocalDate dateOpen);
 
     @Query("select coalesce(sum(d.price), 0) from DealEntity d where d.price is not null")

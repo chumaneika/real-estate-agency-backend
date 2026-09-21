@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -40,8 +41,14 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/admin/**").hasAuthority("ROLE_ADMIN")
-                        .anyRequest().permitAll())
+                        .requestMatchers(HttpMethod.GET, "/api/v1/properties/get-all", "/api/v1/properties/*").permitAll()
+                        .requestMatchers("/api/v1/admin/**", "/api/v1/owners/**", "/api/v1/users/**", "/api/v1/deals/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/agent/**").hasRole("AGENT")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/viewing-requests").hasRole("CLIENT")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/properties", "/api/v1/properties/create").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/properties/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/properties/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
                 .exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
                         new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
                         new AntPathRequestMatcher("/api/**")
@@ -72,7 +79,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://127.0.0.1:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Content-Type"));
         configuration.setAllowCredentials(true);
 

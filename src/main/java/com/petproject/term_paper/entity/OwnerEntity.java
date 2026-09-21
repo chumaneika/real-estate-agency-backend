@@ -1,94 +1,52 @@
 package com.petproject.term_paper.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.petproject.term_paper.entity.enums.OwnerType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "owners")
-@NoArgsConstructor
-@AllArgsConstructor
 public class OwnerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "owner_type", nullable = false, columnDefinition = "varchar(32) default 'INDIVIDUAL'")
+    private OwnerType ownerType = OwnerType.INDIVIDUAL;
+    @Column(name = "phoneNumber") private String phone;
+    @Column(name = "email") private String email;
+    @Column(name = "name") private String firstName;
+    @Column(name = "surname") private String lastName;
+    @Column(name = "middle_name") private String middleName;
+    @Column(name = "company_name") private String companyName;
+    @Column(name = "tax_id") private String taxId;
+    @Column(name = "registration_number") private String registrationNumber;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @OneToMany(mappedBy = "owner")
+    private List<PropertyEntity> properties = new ArrayList<>();
 
-    @Column(name = "surname", nullable = false)
-    private String surname;
-
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "phoneNumber", unique = true)
-    private String phoneNumber;
-
-    @Column(name = "notes")
-    private String notes;
-
-    @OneToMany(mappedBy = "ownerEntity", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "owner-properties")
-    private List<PropertyEntity> properties;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<PropertyEntity> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<PropertyEntity> properties) {
-        this.properties = properties;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public OwnerType getOwnerType() { return ownerType; }
+    public void setOwnerType(OwnerType ownerType) { this.ownerType = ownerType; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getMiddleName() { return middleName; }
+    public void setMiddleName(String middleName) { this.middleName = middleName; }
+    public String getCompanyName() { return companyName; }
+    public void setCompanyName(String companyName) { this.companyName = companyName; }
+    public String getTaxId() { return taxId; }
+    public void setTaxId(String taxId) { this.taxId = taxId; }
+    public String getRegistrationNumber() { return registrationNumber; }
+    public void setRegistrationNumber(String registrationNumber) { this.registrationNumber = registrationNumber; }
+    public List<PropertyEntity> getProperties() { return properties; }
+    public void setProperties(List<PropertyEntity> properties) { this.properties = properties; }
 }

@@ -6,13 +6,16 @@ import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.entity.UserEntity;
 import com.petproject.term_paper.entity.ViewingRequestEntity;
 import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
+import com.petproject.term_paper.entity.enums.UserRole;
 import com.petproject.term_paper.repository.ViewingRequestRepository;
 import com.petproject.term_paper.util.EntityFinder;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +32,9 @@ public class ViewingRequestService {
         UserEntity user = users.findByUsername(username)
                 .filter(UserEntity::isEnabled)
                 .orElseThrow(() -> new IllegalArgumentException("Your account is unavailable."));
+        if (user.getRole() != UserRole.CLIENT) {
+            throw new IllegalArgumentException("Only clients can request a viewing.");
+        }
         PropertyEntity property = entityFinder.findProperty(request.getPropertyId());
 
         ViewingRequestEntity entity = new ViewingRequestEntity();
@@ -40,6 +46,12 @@ public class ViewingRequestService {
         entity.setStatus(ViewingRequestStatus.PENDING);
         entity.setCreatedAt(LocalDateTime.now());
         return toDTO(viewingRequests.save(entity));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ViewingRequestDTO> getAssignedToAgent(String username) {
+        return viewingRequests.findAllByPropertyAgentUsernameOrderByCreatedAtDesc(username)
+                .stream().map(this::toDTO).toList();
     }
 
     private void validate(CreateViewingRequest request) {

@@ -1,6 +1,7 @@
 package com.petproject.term_paper.controller;
 
 import com.petproject.term_paper.entity.UserEntity;
+import com.petproject.term_paper.entity.enums.UserRole;
 import com.petproject.term_paper.service.UserDetailsServiceImpl;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class AdminInit {
         admin.setUsername(adminUsername);
         admin.setEmail(adminEmail);
         admin.setPassword(passwordEncoder.encode(adminPassword));
-        admin.setRoles("ROLE_ADMIN");
+        admin.setRole(UserRole.ADMIN);
         admin.setEnabled(true);
 
         userService.createUser(admin);

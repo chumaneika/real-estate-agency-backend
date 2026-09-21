@@ -6,8 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PropertyDTO {
-    private Long id;
+public class PropertyUpdateRequest {
     private String title;
     private String description;
     private String address;
@@ -16,6 +15,6 @@ public class PropertyDTO {
     private Double price;
     private PropertyType type;
     private List<String> imageUrls;
-    private OwnerSummaryDTO owner;
-    private AgentSummaryDTO agent;
+    private Long ownerId;
+    private Long agentId;
 }

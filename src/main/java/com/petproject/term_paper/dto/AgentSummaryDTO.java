@@ -1,13 +1,14 @@
 package com.petproject.term_paper.dto;
 
-import com.petproject.term_paper.entity.enums.UserRole;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class UserDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AgentSummaryDTO {
     private Long id;
     private String username;
     private String email;
-    private UserRole role;
-    private boolean enabled;
 }

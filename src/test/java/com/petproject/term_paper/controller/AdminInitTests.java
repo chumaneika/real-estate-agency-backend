@@ -1,6 +1,7 @@
 package com.petproject.term_paper.controller;
 
 import com.petproject.term_paper.entity.UserEntity;
+import com.petproject.term_paper.entity.enums.UserRole;
 import com.petproject.term_paper.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -36,7 +37,7 @@ class AdminInitTests {
         assertEquals("prime-admin", admin.getUsername());
         assertEquals("admin@example.com", admin.getEmail());
         assertEquals("encoded-password", admin.getPassword());
-        assertEquals("ROLE_ADMIN", admin.getRoles());
+        assertEquals(UserRole.ADMIN, admin.getRole());
         assertTrue(admin.isEnabled());
     }
 }

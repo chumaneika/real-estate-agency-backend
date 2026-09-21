@@ -5,6 +5,7 @@ import com.petproject.term_paper.dto.RegisterRequest;
 import com.petproject.term_paper.dto.UserDTO;
 import com.petproject.term_paper.dto.mapping.UserMapping;
 import com.petproject.term_paper.entity.UserEntity;
+import com.petproject.term_paper.entity.enums.UserRole;
 import com.petproject.term_paper.service.UserDetailsServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +87,7 @@ public class AuthController {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRoles("ROLE_USER");
+        user.setRole(UserRole.CLIENT);
         user.setEnabled(true);
 
         UserDTO response = userMapping.toDTO(userService.createUser(user));

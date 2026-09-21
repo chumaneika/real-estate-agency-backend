@@ -1,53 +1,49 @@
 package com.petproject.term_paper.controller;
 
+import com.petproject.term_paper.dto.PropertyCreateRequest;
 import com.petproject.term_paper.dto.PropertyDTO;
+import com.petproject.term_paper.dto.PropertyUpdateRequest;
 import com.petproject.term_paper.dto.mapping.PropertyMapping;
-import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.service.PropertyService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/properties")
 public class PropertyController {
-    private final PropertyService propertyService;
-    private final PropertyMapping propertyMapping;
+    private final PropertyService properties;
+    private final PropertyMapping mapping;
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<PropertyDTO>> getAllProperties() {
-        return ResponseEntity.ok(propertyService.getAllProperties().stream().map(propertyMapping::toDTO).toList());
+    public List<PropertyDTO> getAllProperties() {
+        return properties.getAllProperties().stream().map(mapping::toDTO).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPropertyById(@PathVariable("id") Long id) {
-        try {
-            return ResponseEntity.ok(propertyMapping.toDTO(propertyService.getPropertyById(id)));
-        } catch (EntityNotFoundException exception) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Property not found."));
-        }
+    public PropertyDTO getPropertyById(@PathVariable Long id) { return mapping.toDTO(properties.getPropertyById(id)); }
+
+    @PostMapping({"", "/create"})
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyCreateRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapping.toDTO(properties.createProperty(request)));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<PropertyDTO> createProperty(@RequestBody PropertyEntity propertyEntity) {
-        PropertyEntity createdPropertyEntity = propertyService.createProperty(propertyEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(propertyMapping.toDTO(createdPropertyEntity));
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public PropertyDTO updateProperty(@PathVariable Long id, @RequestBody PropertyUpdateRequest request) {
+        return mapping.toDTO(properties.updateProperty(id, request));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidProperty(IllegalArgumentException exception) {
-        return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteProperty(@PathVariable("id") Long id) {
-        propertyService.deleteProperty(id);
+    @DeleteMapping({"/{id}", "/delete/{id}"})
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteProperty(@PathVariable Long id) {
+        properties.deleteProperty(id);
         return ResponseEntity.noContent().build();
     }
 }

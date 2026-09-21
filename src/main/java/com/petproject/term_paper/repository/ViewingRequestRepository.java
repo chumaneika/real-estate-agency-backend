@@ -8,7 +8,9 @@ import java.util.List;
 import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
 
 public interface ViewingRequestRepository extends JpaRepository<ViewingRequestEntity, Long> {
+    boolean existsByPropertyId(Long propertyId);
     List<ViewingRequestEntity> findTop5ByOrderByCreatedAtDesc();
     long countByStatus(ViewingRequestStatus status);
     long countByCreatedAtGreaterThanEqualAndCreatedAtLessThan(LocalDateTime start, LocalDateTime end);
+    List<ViewingRequestEntity> findAllByPropertyAgentUsernameOrderByCreatedAtDesc(String username);
 }

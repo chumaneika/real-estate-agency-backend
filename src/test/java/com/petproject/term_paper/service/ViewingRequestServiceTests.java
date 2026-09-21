@@ -5,6 +5,7 @@ import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.entity.UserEntity;
 import com.petproject.term_paper.entity.ViewingRequestEntity;
 import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
+import com.petproject.term_paper.entity.enums.UserRole;
 import com.petproject.term_paper.repository.ViewingRequestRepository;
 import com.petproject.term_paper.util.EntityFinder;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ class ViewingRequestServiceTests {
         UserEntity user = new UserEntity();
         user.setId(4L);
         user.setUsername("malik9");
+        user.setRole(UserRole.CLIENT);
         user.setEnabled(true);
         PropertyEntity property = new PropertyEntity();
         property.setId(7L);
@@ -72,6 +74,18 @@ class ViewingRequestServiceTests {
         CreateViewingRequest request = validRequest();
         request.setComment("a".repeat(1001));
         assertThrows(IllegalArgumentException.class, () -> service.create("malik9", request));
+    }
+
+    @Test
+    void rejectsViewingRequestFromAgentAccount() {
+        UserEntity agent = new UserEntity();
+        agent.setUsername("agent");
+        agent.setRole(UserRole.AGENT);
+        agent.setEnabled(true);
+        when(users.findByUsername("agent")).thenReturn(Optional.of(agent));
+
+        assertThrows(IllegalArgumentException.class, () -> service.create("agent", validRequest()));
+        verifyNoInteractions(repository, finder);
     }
 
     private CreateViewingRequest validRequest() {

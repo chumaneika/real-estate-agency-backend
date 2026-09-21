@@ -4,10 +4,7 @@ import com.petproject.term_paper.entity.enums.UserRole;
 import lombok.Data;
 
 @Data
-public class UserDTO {
-    private Long id;
-    private String username;
-    private String email;
+public class AdminUserUpdateRequest {
     private UserRole role;
-    private boolean enabled;
+    private Boolean enabled;
 }

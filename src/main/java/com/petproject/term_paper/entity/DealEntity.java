@@ -1,7 +1,5 @@
 package com.petproject.term_paper.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.petproject.term_paper.entity.enums.StatusDeal;
 import jakarta.persistence.*;
 
@@ -13,110 +11,44 @@ public class DealEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "title", nullable = false)
-    private String title;
-
-    @Column(name = "dateOpen", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate dateOpen;
-
-    @Column(name = "dateClose", nullable = true)
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate dateClose;
-
+    @Column(name = "title", nullable = false) private String title;
+    @Column(name = "dateOpen", nullable = false) private LocalDate dateOpen;
+    @Column(name = "dateClose") private LocalDate dateClose;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private StatusDeal status;
+    @Column(name = "status", nullable = false) private StatusDeal status;
+    @Column(name = "price") private Double price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "property_id") private PropertyEntity property;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_user_id") private UserEntity client;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agent_user_id") private UserEntity agent;
 
-    @Column(name = "price")
-    private Double price;
+    // Read-only references keep legacy deal links auditable until an administrator
+    // can match the old client/employee rows to real user accounts.
+    @Column(name = "client_id", insertable = false, updatable = false)
+    private Long legacyClientId;
+    @Column(name = "employee_id", insertable = false, updatable = false)
+    private Long legacyEmployeeId;
 
-    @ManyToOne
-    @JoinColumn(name = "property_id")
-    @JsonBackReference(value = "owner-properties")
-    private PropertyEntity propertyEntity;
-
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    @JsonBackReference(value = "client-deals")
-    private ClientEntity clientEntity;
-
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    @JsonBackReference(value = "employee-deals")
-    private EmployeeEntity employeeEntity;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDate getDateOpen() {
-        return dateOpen;
-    }
-
-    public void setDateOpen(LocalDate dateOpen) {
-        this.dateOpen = dateOpen;
-    }
-
-    public LocalDate getDateClose() {
-        return dateClose;
-    }
-
-    public void setDateClose(LocalDate dateClose) {
-        this.dateClose = dateClose;
-    }
-
-    public StatusDeal getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusDeal status) {
-        this.status = status;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public PropertyEntity getProperty() {
-        return propertyEntity;
-    }
-
-    public void setProperty(PropertyEntity propertyEntity) {
-        this.propertyEntity = propertyEntity;
-    }
-
-    public ClientEntity getClient() {
-        return clientEntity;
-    }
-
-    public void setClient(ClientEntity clientEntity) {
-        this.clientEntity = clientEntity;
-    }
-
-    public EmployeeEntity getEmployee() {
-        return employeeEntity;
-    }
-
-    public void setEmployee(EmployeeEntity employeeEntity) {
-        this.employeeEntity = employeeEntity;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public LocalDate getDateOpen() { return dateOpen; }
+    public void setDateOpen(LocalDate dateOpen) { this.dateOpen = dateOpen; }
+    public LocalDate getDateClose() { return dateClose; }
+    public void setDateClose(LocalDate dateClose) { this.dateClose = dateClose; }
+    public StatusDeal getStatus() { return status; }
+    public void setStatus(StatusDeal status) { this.status = status; }
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
+    public PropertyEntity getProperty() { return property; }
+    public void setProperty(PropertyEntity property) { this.property = property; }
+    public UserEntity getClient() { return client; }
+    public void setClient(UserEntity client) { this.client = client; }
+    public UserEntity getAgent() { return agent; }
+    public void setAgent(UserEntity agent) { this.agent = agent; }
+    public Long getLegacyClientId() { return legacyClientId; }
+    public Long getLegacyEmployeeId() { return legacyEmployeeId; }
 }
-

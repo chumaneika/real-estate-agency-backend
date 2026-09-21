@@ -56,4 +56,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .map(userMapping::toDTO)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
+
 }
