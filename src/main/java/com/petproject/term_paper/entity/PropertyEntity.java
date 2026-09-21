@@ -1,6 +1,7 @@
 package com.petproject.term_paper.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.petproject.term_paper.entity.enums.PropertyType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

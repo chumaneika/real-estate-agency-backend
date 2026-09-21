@@ -1,7 +1,7 @@
 package com.petproject.term_paper.service;
 
-import com.petproject.term_paper.entity.ViewingRequestStatus;
-import com.petproject.term_paper.entity.PropertyType;
+import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
+import com.petproject.term_paper.entity.enums.PropertyType;
 import com.petproject.term_paper.repository.DealRepository;
 import com.petproject.term_paper.repository.PropertyRepository;
 import com.petproject.term_paper.repository.UserRepository;

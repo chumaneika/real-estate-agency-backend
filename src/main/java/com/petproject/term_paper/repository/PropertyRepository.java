@@ -1,7 +1,7 @@
 package com.petproject.term_paper.repository;
 
 import com.petproject.term_paper.entity.PropertyEntity;
-import com.petproject.term_paper.entity.PropertyType;
+import com.petproject.term_paper.entity.enums.PropertyType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

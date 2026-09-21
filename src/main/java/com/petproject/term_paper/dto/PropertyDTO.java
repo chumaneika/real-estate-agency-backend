@@ -1,6 +1,6 @@
 package com.petproject.term_paper.dto;
 
-import com.petproject.term_paper.entity.PropertyType;
+import com.petproject.term_paper.entity.enums.PropertyType;
 import lombok.Data;
 
 import java.util.List;

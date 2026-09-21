@@ -2,7 +2,7 @@ package com.petproject.term_paper.controller;
 
 import com.petproject.term_paper.dto.CreateViewingRequest;
 import com.petproject.term_paper.dto.ViewingRequestDTO;
-import com.petproject.term_paper.entity.ViewingRequestStatus;
+import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
 import com.petproject.term_paper.service.ViewingRequestService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;

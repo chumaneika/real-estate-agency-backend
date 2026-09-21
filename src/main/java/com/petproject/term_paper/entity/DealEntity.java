@@ -2,6 +2,7 @@ package com.petproject.term_paper.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.petproject.term_paper.entity.enums.StatusDeal;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

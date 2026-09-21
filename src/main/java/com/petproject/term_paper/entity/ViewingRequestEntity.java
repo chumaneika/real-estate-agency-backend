@@ -1,5 +1,6 @@
 package com.petproject.term_paper.entity;
 
+import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

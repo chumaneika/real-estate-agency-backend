@@ -4,7 +4,7 @@ import com.petproject.term_paper.dto.CreateViewingRequest;
 import com.petproject.term_paper.entity.PropertyEntity;
 import com.petproject.term_paper.entity.UserEntity;
 import com.petproject.term_paper.entity.ViewingRequestEntity;
-import com.petproject.term_paper.entity.ViewingRequestStatus;
+import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
 import com.petproject.term_paper.repository.ViewingRequestRepository;
 import com.petproject.term_paper.util.EntityFinder;
 import org.junit.jupiter.api.Test;

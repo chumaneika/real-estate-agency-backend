@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import com.petproject.term_paper.entity.ViewingRequestStatus;
+import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
 
 public interface ViewingRequestRepository extends JpaRepository<ViewingRequestEntity, Long> {
     List<ViewingRequestEntity> findTop5ByOrderByCreatedAtDesc();

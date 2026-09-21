@@ -1,6 +1,6 @@
 package com.petproject.term_paper.dto;
 
-import com.petproject.term_paper.entity.ViewingRequestStatus;
+import com.petproject.term_paper.entity.enums.ViewingRequestStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
