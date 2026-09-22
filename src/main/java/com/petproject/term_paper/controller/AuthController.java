@@ -40,17 +40,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest servletRequest) {
-        if (isBlank(request.getUsername()) || isBlank(request.getPassword())) {
-            return error(HttpStatus.BAD_REQUEST, "Username or email and password are required.");
+        String email = request.getEmail() == null ? "" : request.getEmail().trim().toLowerCase();
+        if (!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$") || isBlank(request.getPassword())) {
+            return error(HttpStatus.BAD_REQUEST, "A valid email and password are required.");
         }
 
-        UserEntity user = userService.findByUsernameOrEmail(request.getUsername().trim())
+        UserEntity user = userService.findByEmail(email)
                 .filter(UserEntity::isEnabled)
                 .filter(foundUser -> passwordEncoder.matches(request.getPassword(), foundUser.getPassword()))
                 .orElse(null);
 
         if (user == null) {
-            return error(HttpStatus.UNAUTHORIZED, "Incorrect username or password.");
+            return error(HttpStatus.UNAUTHORIZED, "Incorrect email or password.");
         }
 
         Principal currentUser = servletRequest.getUserPrincipal();
@@ -62,7 +63,7 @@ public class AuthController {
             servletRequest.login(user.getUsername(), request.getPassword());
             return ResponseEntity.ok(userMapping.toDTO(user));
         } catch (ServletException exception) {
-            return error(HttpStatus.UNAUTHORIZED, "Incorrect username or password.");
+            return error(HttpStatus.UNAUTHORIZED, "Incorrect email or password.");
         }
     }
 

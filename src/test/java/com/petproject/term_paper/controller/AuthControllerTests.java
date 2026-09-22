@@ -29,7 +29,7 @@ class AuthControllerTests {
     @Test
     void loginAcceptsEmailAndAuthenticatesWithUsername() throws Exception {
         LoginRequest login = new LoginRequest();
-        login.setUsername("client@primekey.local");
+        login.setEmail(" CLIENT@primekey.local ");
         login.setPassword("Client123!");
         UserEntity user = new UserEntity();
         user.setUsername("primekey_client");
@@ -39,7 +39,7 @@ class AuthControllerTests {
         UserDTO dto = new UserDTO();
         dto.setUsername("primekey_client");
 
-        when(users.findByUsernameOrEmail("client@primekey.local")).thenReturn(Optional.of(user));
+        when(users.findByEmail("client@primekey.local")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("Client123!", "encoded-password")).thenReturn(true);
         when(mapping.toDTO(user)).thenReturn(dto);
 
@@ -48,6 +48,18 @@ class AuthControllerTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(dto, response.getBody());
         verify(request).login("primekey_client", "Client123!");
+    }
+
+    @Test
+    void loginRejectsUsernameInsteadOfEmail() {
+        LoginRequest login = new LoginRequest();
+        login.setEmail("primekey_client");
+        login.setPassword("Client123!");
+
+        var response = controller.login(login, request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        verifyNoInteractions(users, mapping, passwordEncoder);
     }
 
     @Test
