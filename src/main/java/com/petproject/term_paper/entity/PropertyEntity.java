@@ -1,6 +1,7 @@
 package com.petproject.term_paper.entity;
 
 import com.petproject.term_paper.entity.enums.PropertyType;
+import com.petproject.term_paper.entity.enums.RenovationType;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,14 @@ public class PropertyEntity {
     @Column(name = "area") private Double area;
     @Column(name = "rooms") private Integer rooms;
     @Column(name = "price") private Double price;
+    @Column(name = "floor_number") private Integer floor;
+    @Column(name = "total_floors") private Integer totalFloors;
+    @Column(name = "construction_year") private Integer constructionYear;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "renovation_type") private RenovationType renovation;
+    @Column(name = "has_balcony") private Boolean hasBalcony;
+    @Column(name = "has_parking") private Boolean hasParking;
+    @Column(name = "metro_distance_minutes") private Integer metroDistanceMinutes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
@@ -54,6 +63,20 @@ public class PropertyEntity {
     public void setRooms(Integer rooms) { this.rooms = rooms; }
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }
+    public Integer getFloor() { return floor; }
+    public void setFloor(Integer floor) { this.floor = floor; }
+    public Integer getTotalFloors() { return totalFloors; }
+    public void setTotalFloors(Integer totalFloors) { this.totalFloors = totalFloors; }
+    public Integer getConstructionYear() { return constructionYear; }
+    public void setConstructionYear(Integer constructionYear) { this.constructionYear = constructionYear; }
+    public RenovationType getRenovation() { return renovation; }
+    public void setRenovation(RenovationType renovation) { this.renovation = renovation; }
+    public Boolean getHasBalcony() { return hasBalcony; }
+    public void setHasBalcony(Boolean hasBalcony) { this.hasBalcony = hasBalcony; }
+    public Boolean getHasParking() { return hasParking; }
+    public void setHasParking(Boolean hasParking) { this.hasParking = hasParking; }
+    public Integer getMetroDistanceMinutes() { return metroDistanceMinutes; }
+    public void setMetroDistanceMinutes(Integer metroDistanceMinutes) { this.metroDistanceMinutes = metroDistanceMinutes; }
     public OwnerEntity getOwner() { return owner; }
     public void setOwner(OwnerEntity owner) { this.owner = owner; }
     public UserEntity getAgent() { return agent; }

@@ -40,7 +40,9 @@ public class PropertyService {
         PropertyEntity property = new PropertyEntity();
         apply(property, request.getTitle(), request.getDescription(), request.getAddress(), request.getArea(),
                 request.getRooms(), request.getPrice(), request.getType(), request.getImageUrls(),
-                request.getOwnerId(), request.getAgentId());
+                request.getOwnerId(), request.getAgentId(), request.getFloor(), request.getTotalFloors(),
+                request.getConstructionYear(), request.getRenovation(), request.getHasBalcony(),
+                request.getHasParking(), request.getMetroDistanceMinutes());
         return properties.save(property);
     }
 
@@ -50,7 +52,9 @@ public class PropertyService {
         PropertyEntity property = getPropertyById(id);
         apply(property, request.getTitle(), request.getDescription(), request.getAddress(), request.getArea(),
                 request.getRooms(), request.getPrice(), request.getType(), request.getImageUrls(),
-                request.getOwnerId(), request.getAgentId());
+                request.getOwnerId(), request.getAgentId(), request.getFloor(), request.getTotalFloors(),
+                request.getConstructionYear(), request.getRenovation(), request.getHasBalcony(),
+                request.getHasParking(), request.getMetroDistanceMinutes());
         return property;
     }
 
@@ -69,12 +73,22 @@ public class PropertyService {
 
     private void apply(PropertyEntity property, String title, String description, String address, Double area,
                        Integer rooms, Double price, com.petproject.term_paper.entity.enums.PropertyType type,
-                       List<String> imageUrls, Long ownerId, Long agentId) {
+                       List<String> imageUrls, Long ownerId, Long agentId, Integer floor, Integer totalFloors,
+                       Integer constructionYear, com.petproject.term_paper.entity.enums.RenovationType renovation,
+                       Boolean hasBalcony, Boolean hasParking, Integer metroDistanceMinutes) {
         if (ownerId == null) throw new IllegalArgumentException("Owner is required.");
         if (address == null || address.isBlank()) throw new IllegalArgumentException("Address is required.");
         if (area != null && area <= 0) throw new IllegalArgumentException("Area must be greater than zero.");
         if (rooms != null && rooms < 0) throw new IllegalArgumentException("Rooms cannot be negative.");
         if (price != null && price < 0) throw new IllegalArgumentException("Price cannot be negative.");
+        if (floor != null && floor < 0) throw new IllegalArgumentException("Floor cannot be negative.");
+        if (totalFloors != null && totalFloors < 1) throw new IllegalArgumentException("Total floors must be greater than zero.");
+        if (floor != null && totalFloors != null && floor > totalFloors) throw new IllegalArgumentException("Floor cannot exceed total floors.");
+        int currentYear = java.time.Year.now().getValue();
+        if (constructionYear != null && (constructionYear < 1800 || constructionYear > currentYear + 5)) {
+            throw new IllegalArgumentException("Construction year is outside the supported range.");
+        }
+        if (metroDistanceMinutes != null && metroDistanceMinutes < 0) throw new IllegalArgumentException("Metro distance cannot be negative.");
         property.setTitle(normalize(title));
         property.setDescription(normalize(description));
         property.setAddress(address.trim());
@@ -82,6 +96,13 @@ public class PropertyService {
         property.setRooms(rooms);
         property.setPrice(price);
         property.setType(type);
+        property.setFloor(floor);
+        property.setTotalFloors(totalFloors);
+        property.setConstructionYear(constructionYear);
+        property.setRenovation(renovation);
+        property.setHasBalcony(hasBalcony);
+        property.setHasParking(hasParking);
+        property.setMetroDistanceMinutes(metroDistanceMinutes);
         property.setImageUrls(normalizeImageUrls(imageUrls));
         property.setOwner(owners.findById(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException("Owner not found with id: " + ownerId)));
